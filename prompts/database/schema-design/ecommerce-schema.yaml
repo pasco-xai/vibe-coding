@@ -1,0 +1,249 @@
+id: database-ecommerce-schema
+name: E-Commerce Database Schema
+domain: database
+subdomain: schema-design
+version: 1.0.0
+created: 2026-05-09
+updated: 2026-05-09
+status: active
+
+# Technical Specifications
+technical_specs:
+  min_model: gpt-4
+  recommended_model: gpt-4-turbo
+  max_tokens: 3000
+  temperature: 0.5
+  top_p: 0.9
+
+# System Prompt
+system_prompt: |
+  You are an expert database architect and SQL specialist with deep knowledge of:
+  - Relational database design principles
+  - Normalization and denormalization strategies
+  - Index optimization and query performance
+  - Constraints and data integrity
+  - E-commerce domain patterns
+  - Scalability considerations
+  - PostgreSQL and MySQL
+  - Transaction handling and ACID properties
+  
+  Your role is to help developers design robust, efficient database schemas.
+
+# User Prompt Template
+user_prompt_template: |
+  Design a normalized PostgreSQL schema for an e-commerce platform with:
+  - Users/Customers management
+  - Product catalog with variants
+  - Orders and order items
+  - Inventory tracking
+  - Reviews and ratings
+  - Addresses and shipping
+  - Payment information
+  
+  Provide:
+  1. Complete SQL schema with all tables
+  2. Relationships and foreign keys
+  3. Indexes for performance
+  4. Constraints and validations
+  5. Sample queries for common operations
+
+# Tags and Metadata
+tags:
+  - database
+  - schema-design
+  - postgresql
+  - sql
+  - normalization
+  - ecommerce
+
+difficulty_level: intermediate
+use_cases:
+  - description: "Designing e-commerce database schema"
+    example_input: |
+      Create a database schema for an online store that supports:
+      - Multiple product variants (size, color, etc.)
+      - Inventory management
+      - Customer orders with multiple items
+      - Address management
+      - Order status tracking
+    example_output: |
+      -- Users/Customers Table
+      CREATE TABLE customers (
+        id BIGSERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        phone VARCHAR(20),
+        password_hash VARCHAR(255) NOT NULL,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT email_format CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$')
+      );
+      
+      -- Products Table
+      CREATE TABLE products (
+        id BIGSERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        sku VARCHAR(100) UNIQUE NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        cost DECIMAL(10, 2),
+        category_id BIGINT REFERENCES categories(id) ON DELETE SET NULL,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT price_positive CHECK (price > 0)
+      );
+      
+      CREATE INDEX idx_products_category ON products(category_id);
+      CREATE INDEX idx_products_active ON products(is_active);
+      
+      -- Product Variants (Size, Color, etc.)
+      CREATE TABLE product_variants (
+        id BIGSERIAL PRIMARY KEY,
+        product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+        sku VARCHAR(100) UNIQUE NOT NULL,
+        size VARCHAR(50),
+        color VARCHAR(50),
+        price_adjustment DECIMAL(10, 2) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT variant_unique UNIQUE(product_id, size, color)
+      );
+      
+      -- Inventory Table
+      CREATE TABLE inventory (
+        id BIGSERIAL PRIMARY KEY,
+        product_variant_id BIGINT NOT NULL REFERENCES product_variants(id) ON DELETE CASCADE,
+        quantity_on_hand INT NOT NULL DEFAULT 0,
+        quantity_reserved INT NOT NULL DEFAULT 0,
+        quantity_available INT GENERATED ALWAYS AS (quantity_on_hand - quantity_reserved) STORED,
+        reorder_level INT DEFAULT 10,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT quantity_positive CHECK (quantity_on_hand >= 0)
+      );
+      
+      CREATE INDEX idx_inventory_variant ON inventory(product_variant_id);
+      
+      -- Addresses Table
+      CREATE TABLE addresses (
+        id BIGSERIAL PRIMARY KEY,
+        customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+        address_type VARCHAR(50), -- 'billing', 'shipping'
+        street_address_1 VARCHAR(255) NOT NULL,
+        street_address_2 VARCHAR(255),
+        city VARCHAR(100) NOT NULL,
+        state_province VARCHAR(100),
+        postal_code VARCHAR(20) NOT NULL,
+        country VARCHAR(100) NOT NULL,
+        is_default BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      
+      CREATE INDEX idx_addresses_customer ON addresses(customer_id);
+      
+      -- Orders Table
+      CREATE TABLE orders (
+        id BIGSERIAL PRIMARY KEY,
+        customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE RESTRICT,
+        order_number VARCHAR(50) UNIQUE NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'pending', -- pending, confirmed, shipped, delivered, cancelled
+        subtotal DECIMAL(12, 2) NOT NULL,
+        tax DECIMAL(12, 2) NOT NULL DEFAULT 0,
+        shipping_cost DECIMAL(12, 2) NOT NULL DEFAULT 0,
+        total DECIMAL(12, 2) NOT NULL,
+        shipping_address_id BIGINT REFERENCES addresses(id) ON DELETE RESTRICT,
+        billing_address_id BIGINT REFERENCES addresses(id) ON DELETE RESTRICT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        shipped_at TIMESTAMP,
+        delivered_at TIMESTAMP
+      );
+      
+      CREATE INDEX idx_orders_customer ON orders(customer_id);
+      CREATE INDEX idx_orders_status ON orders(status);
+      CREATE INDEX idx_orders_created ON orders(created_at);
+      
+      -- Order Items Table
+      CREATE TABLE order_items (
+        id BIGSERIAL PRIMARY KEY,
+        order_id BIGINT NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+        product_variant_id BIGINT NOT NULL REFERENCES product_variants(id),
+        quantity INT NOT NULL,
+        price_at_purchase DECIMAL(10, 2) NOT NULL,
+        line_total DECIMAL(12, 2) GENERATED ALWAYS AS (quantity * price_at_purchase) STORED,
+        CONSTRAINT quantity_positive CHECK (quantity > 0)
+      );
+      
+      CREATE INDEX idx_order_items_order ON order_items(order_id);
+      
+      -- Reviews Table
+      CREATE TABLE reviews (
+        id BIGSERIAL PRIMARY KEY,
+        product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+        customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+        rating INT NOT NULL,
+        title VARCHAR(255),
+        content TEXT,
+        is_verified_purchase BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT rating_valid CHECK (rating >= 1 AND rating <= 5),
+        CONSTRAINT unique_review UNIQUE(product_id, customer_id)
+      );
+      
+      CREATE INDEX idx_reviews_product ON reviews(product_id);
+      CREATE INDEX idx_reviews_rating ON reviews(rating);
+
+# Parameters and Configuration
+parameters:
+  - name: database-system
+    type: string
+    description: Database system to target
+    required: false
+    default: postgresql
+    examples: [postgresql, mysql, mariadb]
+
+# Performance and Quality Metrics
+metrics:
+  success_rate: 0.94
+  average_execution_time: "2.1s"
+  user_satisfaction: 4.7
+  design_efficiency: 92
+  last_updated: "2026-05-09"
+
+# Related Prompts
+related_prompts:
+  - id: database-query-optimization
+    relationship: next-step
+  - id: database-migrations
+    relationship: related
+
+# Database Design Principles
+principles:
+  - "Normalize to 3NF to eliminate redundancy"
+  - "Use surrogate keys (auto-increment IDs)"
+  - "Foreign keys enforce referential integrity"
+  - "Constraints validate data quality"
+  - "Indexes optimize query performance"
+
+# Common Pitfalls to Avoid
+pitfalls:
+  - "Over-normalization causing excessive joins"
+  - "Missing indexes on frequently queried columns"
+  - "No constraints allowing invalid data"
+  - "Not using proper data types"
+  - "Ignoring NULL handling implications"
+  - "Missing foreign key constraints"
+  - "No created_at/updated_at timestamps"
+  - "Denormalization without clear performance needs"
+
+# Tips for Best Results
+tips:
+  - "Always include timestamps (created_at, updated_at)"
+  - "Use appropriate data types to save space"
+  - "Add CHECK constraints for data validation"
+  - "Create indexes on foreign keys and frequently filtered columns"
+  - "Use UNIQUE constraints for business keys"
+  - "Implement CASCADE/RESTRICT rules appropriately"
+  - "Test queries with EXPLAIN ANALYZE"
+  - "Plan for growth and scalability from the start"
