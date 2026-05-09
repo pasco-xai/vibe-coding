@@ -1,0 +1,365 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-05-09",
+  "total_prompts": 47,
+  "domains": {
+    "frontend": {
+      "count": 9,
+      "prompts": [
+        {
+          "id": "frontend-button-component",
+          "name": "Accessible Button Component",
+          "difficulty": "beginner",
+          "tags": ["react", "ui", "accessibility"],
+          "use_cases": ["web-app", "design-system"]
+        },
+        {
+          "id": "frontend-form-validation",
+          "name": "Form Validation with Error Handling",
+          "difficulty": "intermediate",
+          "tags": ["react", "form", "validation"],
+          "use_cases": ["web-app", "user-input"]
+        },
+        {
+          "id": "frontend-responsive-layout",
+          "name": "Responsive Grid Layout",
+          "difficulty": "beginner",
+          "tags": ["css", "responsive", "tailwind"],
+          "use_cases": ["web-app", "mobile-first"]
+        },
+        {
+          "id": "frontend-modal-component",
+          "name": "Modal Dialog Component",
+          "difficulty": "intermediate",
+          "tags": ["react", "ui", "modal"],
+          "use_cases": ["web-app", "user-interaction"]
+        },
+        {
+          "id": "frontend-data-table",
+          "name": "Data Table with Pagination",
+          "difficulty": "advanced",
+          "tags": ["react", "table", "data"],
+          "use_cases": ["admin-panel", "dashboard"]
+        },
+        {
+          "id": "frontend-state-management",
+          "name": "State Management with Zustand",
+          "difficulty": "intermediate",
+          "tags": ["react", "state", "zustand"],
+          "use_cases": ["web-app", "scaling"]
+        },
+        {
+          "id": "frontend-animations",
+          "name": "Smooth Page Transitions",
+          "difficulty": "intermediate",
+          "tags": ["react", "animation", "ux"],
+          "use_cases": ["web-app", "ux-enhancement"]
+        },
+        {
+          "id": "frontend-dark-mode",
+          "name": "Dark Mode Implementation",
+          "difficulty": "beginner",
+          "tags": ["css", "theme", "ui"],
+          "use_cases": ["web-app", "user-preference"]
+        },
+        {
+          "id": "frontend-infinite-scroll",
+          "name": "Infinite Scroll Component",
+          "difficulty": "advanced",
+          "tags": ["react", "performance", "ui"],
+          "use_cases": ["feed", "list-view"]
+        }
+      ]
+    },
+    "backend": {
+      "count": 8,
+      "prompts": [
+        {
+          "id": "backend-rest-api",
+          "name": "RESTful API Endpoint Design",
+          "difficulty": "intermediate",
+          "tags": ["node", "express", "api"],
+          "use_cases": ["web-app", "microservice"]
+        },
+        {
+          "id": "backend-jwt-auth",
+          "name": "JWT Authentication Implementation",
+          "difficulty": "intermediate",
+          "tags": ["node", "security", "auth"],
+          "use_cases": ["web-app", "user-auth"]
+        },
+        {
+          "id": "backend-input-validation",
+          "name": "Input Validation and Sanitization",
+          "difficulty": "beginner",
+          "tags": ["node", "security", "validation"],
+          "use_cases": ["web-app", "api"]
+        },
+        {
+          "id": "backend-error-handling",
+          "name": "Centralized Error Handler",
+          "difficulty": "intermediate",
+          "tags": ["node", "logging", "error"],
+          "use_cases": ["web-app", "api"]
+        },
+        {
+          "id": "backend-rate-limiting",
+          "name": "Rate Limiting and Throttling",
+          "difficulty": "advanced",
+          "tags": ["node", "security", "performance"],
+          "use_cases": ["api", "ddos-protection"]
+        },
+        {
+          "id": "backend-graphql-api",
+          "name": "GraphQL API with Apollo Server",
+          "difficulty": "advanced",
+          "tags": ["node", "graphql", "api"],
+          "use_cases": ["web-app", "mobile-app"]
+        },
+        {
+          "id": "backend-oauth-integration",
+          "name": "OAuth2 Social Login Integration",
+          "difficulty": "advanced",
+          "tags": ["node", "auth", "oauth"],
+          "use_cases": ["web-app", "user-auth"]
+        },
+        {
+          "id": "backend-file-upload",
+          "name": "Secure File Upload Handler",
+          "difficulty": "intermediate",
+          "tags": ["node", "security", "file"],
+          "use_cases": ["web-app", "api"]
+        }
+      ]
+    },
+    "database": {
+      "count": 6,
+      "prompts": [
+        {
+          "id": "database-schema-design",
+          "name": "Normalized Database Schema",
+          "difficulty": "intermediate",
+          "tags": ["sql", "design", "normalization"],
+          "use_cases": ["web-app", "data-model"]
+        },
+        {
+          "id": "database-ecommerce-schema",
+          "name": "E-Commerce Database Schema",
+          "difficulty": "advanced",
+          "tags": ["sql", "complex", "design"],
+          "use_cases": ["ecommerce", "inventory"]
+        },
+        {
+          "id": "database-query-optimization",
+          "name": "Query Optimization Techniques",
+          "difficulty": "advanced",
+          "tags": ["sql", "performance", "indexing"],
+          "use_cases": ["scaling", "performance"]
+        },
+        {
+          "id": "database-migration-strategy",
+          "name": "Database Migration Strategy",
+          "difficulty": "intermediate",
+          "tags": ["sql", "migrations", "versioning"],
+          "use_cases": ["deployment", "scaling"]
+        },
+        {
+          "id": "database-transaction-handling",
+          "name": "Transaction and Concurrency Control",
+          "difficulty": "advanced",
+          "tags": ["sql", "transactions", "consistency"],
+          "use_cases": ["web-app", "data-integrity"]
+        },
+        {
+          "id": "database-backup-recovery",
+          "name": "Backup and Disaster Recovery",
+          "difficulty": "advanced",
+          "tags": ["sql", "backup", "recovery"],
+          "use_cases": ["devops", "reliability"]
+        }
+      ]
+    },
+    "devops": {
+      "count": 6,
+      "prompts": [
+        {
+          "id": "devops-github-actions",
+          "name": "GitHub Actions CI/CD Pipeline",
+          "difficulty": "intermediate",
+          "tags": ["github", "ci-cd", "automation"],
+          "use_cases": ["deployment", "testing"]
+        },
+        {
+          "id": "devops-docker-containerization",
+          "name": "Docker Containerization Setup",
+          "difficulty": "intermediate",
+          "tags": ["docker", "containers", "devops"],
+          "use_cases": ["deployment", "consistency"]
+        },
+        {
+          "id": "devops-kubernetes-deployment",
+          "name": "Kubernetes Deployment Configuration",
+          "difficulty": "advanced",
+          "tags": ["kubernetes", "orchestration", "scaling"],
+          "use_cases": ["scaling", "high-availability"]
+        },
+        {
+          "id": "devops-monitoring-logging",
+          "name": "Monitoring and Logging Setup",
+          "difficulty": "advanced",
+          "tags": ["devops", "monitoring", "logging"],
+          "use_cases": ["production", "troubleshooting"]
+        },
+        {
+          "id": "devops-security-scanning",
+          "name": "Security Scanning and Compliance",
+          "difficulty": "intermediate",
+          "tags": ["security", "scanning", "compliance"],
+          "use_cases": ["security", "compliance"]
+        },
+        {
+          "id": "devops-env-management",
+          "name": "Environment Configuration Management",
+          "difficulty": "beginner",
+          "tags": ["devops", "config", "secrets"],
+          "use_cases": ["deployment", "security"]
+        }
+      ]
+    },
+    "fullstack": {
+      "count": 5,
+      "prompts": [
+        {
+          "id": "fullstack-project-setup",
+          "name": "Full-Stack Project Scaffolding",
+          "difficulty": "beginner",
+          "tags": ["setup", "scaffold", "monorepo"],
+          "use_cases": ["new-project", "best-practices"]
+        },
+        {
+          "id": "fullstack-api-frontend-integration",
+          "name": "API and Frontend Integration Pattern",
+          "difficulty": "intermediate",
+          "tags": ["integration", "api", "frontend"],
+          "use_cases": ["web-app", "data-flow"]
+        },
+        {
+          "id": "fullstack-authentication-flow",
+          "name": "End-to-End Authentication Flow",
+          "difficulty": "advanced",
+          "tags": ["auth", "security", "flow"],
+          "use_cases": ["web-app", "user-management"]
+        },
+        {
+          "id": "fullstack-error-handling",
+          "name": "Unified Error Handling Strategy",
+          "difficulty": "intermediate",
+          "tags": ["error", "logging", "ux"],
+          "use_cases": ["web-app", "reliability"]
+        },
+        {
+          "id": "fullstack-performance-optimization",
+          "name": "End-to-End Performance Optimization",
+          "difficulty": "advanced",
+          "tags": ["performance", "optimization", "scaling"],
+          "use_cases": ["scaling", "ux"]
+        }
+      ]
+    },
+    "testing": {
+      "count": 4,
+      "prompts": [
+        {
+          "id": "testing-unit-tests",
+          "name": "Unit Testing with Jest",
+          "difficulty": "beginner",
+          "tags": ["jest", "testing", "unit"],
+          "use_cases": ["testing", "quality"]
+        },
+        {
+          "id": "testing-integration-tests",
+          "name": "Integration Testing Strategy",
+          "difficulty": "intermediate",
+          "tags": ["testing", "integration", "api"],
+          "use_cases": ["testing", "quality"]
+        },
+        {
+          "id": "testing-e2e-tests",
+          "name": "E2E Testing with Playwright",
+          "difficulty": "intermediate",
+          "tags": ["playwright", "e2e", "testing"],
+          "use_cases": ["testing", "automation"]
+        },
+        {
+          "id": "testing-performance-tests",
+          "name": "Performance Testing and Benchmarking",
+          "difficulty": "advanced",
+          "tags": ["performance", "testing", "benchmark"],
+          "use_cases": ["performance", "optimization"]
+        }
+      ]
+    },
+    "ai_patterns": {
+      "count": 4,
+      "prompts": [
+        {
+          "id": "ai-code-generation",
+          "name": "AI-Assisted Code Generation",
+          "difficulty": "beginner",
+          "tags": ["ai", "generation", "productivity"],
+          "use_cases": ["development", "scaffolding"]
+        },
+        {
+          "id": "ai-refactoring",
+          "name": "AI-Assisted Code Refactoring",
+          "difficulty": "intermediate",
+          "tags": ["ai", "refactoring", "quality"],
+          "use_cases": ["maintenance", "improvement"]
+        },
+        {
+          "id": "ai-documentation",
+          "name": "AI-Assisted Documentation Generation",
+          "difficulty": "beginner",
+          "tags": ["ai", "documentation", "productivity"],
+          "use_cases": ["documentation", "maintenance"]
+        },
+        {
+          "id": "ai-testing-generation",
+          "name": "AI-Assisted Test Generation",
+          "difficulty": "intermediate",
+          "tags": ["ai", "testing", "automation"],
+          "use_cases": ["testing", "coverage"]
+        }
+      ]
+    }
+  },
+  "search_index": {
+    "by_difficulty": {
+      "beginner": 11,
+      "intermediate": 24,
+      "advanced": 12
+    },
+    "by_technology": {
+      "react": 6,
+      "node": 6,
+      "sql": 6,
+      "docker": 1,
+      "kubernetes": 1,
+      "github": 1,
+      "playwright": 1,
+      "jest": 1,
+      "ai": 4
+    },
+    "by_category": {
+      "web-app": 15,
+      "api": 8,
+      "deployment": 6,
+      "testing": 4,
+      "security": 5,
+      "performance": 6,
+      "data-model": 3,
+      "user-auth": 3,
+      "ui": 3
+    }
+  }
+}
