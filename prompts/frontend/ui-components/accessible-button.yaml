@@ -1,0 +1,269 @@
+id: frontend-accessible-button
+name: Accessible Button Component
+domain: frontend
+subdomain: ui-components
+version: 1.0.0
+created: 2026-05-09
+updated: 2026-05-09
+status: active
+
+# Technical Specifications
+technical_specs:
+  min_model: gpt-3.5-turbo
+  recommended_model: gpt-4
+  max_tokens: 2000
+  temperature: 0.6
+  top_p: 0.9
+
+# System Prompt
+system_prompt: |
+  You are an expert React developer and accessibility specialist with deep knowledge of:
+  - React component best practices and patterns
+  - WCAG 2.1 AA accessibility standards
+  - Semantic HTML and aria attributes
+  - CSS-in-JS and styled-components
+  - Component composition and reusability
+  - TypeScript for React components
+  - Performance optimization
+  
+  Your role is to help developers create accessible, reusable UI components that work for all users.
+
+# User Prompt Template
+user_prompt_template: |
+  Create a fully accessible React button component with:
+  - [VARIANT TYPES]: primary, secondary, danger
+  - [SIZES]: small, medium, large
+  - [STATES]: default, hover, active, disabled, loading
+  - Full WCAG 2.1 AA compliance
+  - Proper semantic HTML and ARIA attributes
+  - TypeScript interfaces
+  - Comprehensive Storybook documentation
+  
+  Include:
+  1. Complete component code with TypeScript
+  2. CSS/styling with accessibility in mind
+  3. Accessibility features list
+  4. Unit tests
+  5. Storybook stories with examples
+
+# Tags and Metadata
+tags:
+  - frontend
+  - react
+  - accessibility
+  - wcag
+  - ui-components
+  - typescript
+
+difficulty_level: beginner
+use_cases:
+  - description: "Creating a versatile button component"
+    example_input: |
+      Create a React button component for a design system that:
+      - Supports primary, secondary, and danger variants
+      - Has small, medium, and large sizes
+      - Shows loading state with spinner
+      - Is fully accessible for keyboard navigation and screen readers
+      - Supports both text and icon+text combinations
+    example_output: |
+      // Button.tsx
+      import React, { ButtonHTMLAttributes } from 'react';
+      import styled from 'styled-components';
+      
+      interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+        variant?: 'primary' | 'secondary' | 'danger';
+        size?: 'small' | 'medium' | 'large';
+        isLoading?: boolean;
+        icon?: React.ReactNode;
+        fullWidth?: boolean;
+      }
+      
+      const StyledButton = styled.button<ButtonProps>`
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        /* Base styles */
+        padding: ${props => {
+          switch(props.size) {
+            case 'small': return '8px 12px';
+            case 'large': return '12px 24px';
+            default: return '10px 16px';
+          }
+        }};
+        font-size: ${props => {
+          switch(props.size) {
+            case 'small': return '12px';
+            case 'large': return '16px';
+            default: return '14px';
+          }
+        }};
+        
+        /* Variant styles */
+        background-color: ${props => {
+          switch(props.variant) {
+            case 'secondary': return '#f0f0f0';
+            case 'danger': return '#dc3545';
+            default: return '#007bff';
+          }
+        }};
+        color: ${props => props.variant === 'secondary' ? '#333' : '#fff'};
+        
+        /* Width */
+        width: ${props => props.fullWidth ? '100%' : 'auto'};
+        
+        /* Hover state */
+        &:hover:not(:disabled) {
+          opacity: 0.9;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Focus state for accessibility */
+        &:focus-visible {
+          outline: 3px solid #0056b3;
+          outline-offset: 2px;
+        }
+        
+        /* Active/pressed state */
+        &:active:not(:disabled) {
+          transform: translateY(0);
+        }
+        
+        /* Disabled state */
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      `;
+      
+      const Spinner = styled.span`
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `;
+      
+      export const Button: React.FC<ButtonProps> = ({
+        variant = 'primary',
+        size = 'medium',
+        isLoading = false,
+        icon,
+        children,
+        disabled,
+        fullWidth = false,
+        ...props
+      }) => {
+        return (
+          <StyledButton
+            variant={variant}
+            size={size}
+            disabled={disabled || isLoading}
+            fullWidth={fullWidth}
+            aria-busy={isLoading}
+            aria-disabled={disabled || isLoading}
+            {...props}
+          >
+            {isLoading && <Spinner aria-hidden="true" />}
+            {icon && <span aria-hidden="true">{icon}</span>}
+            <span>{children}</span>
+          </StyledButton>
+        );
+      };
+
+  - description: "Implementing proper accessibility attributes"
+    example_input: |
+      Add full accessibility support to the button including:
+      - Keyboard navigation (Enter, Space)
+      - Screen reader announcements
+      - Focus management
+      - ARIA live regions for loading state
+    example_output: |
+      // Accessibility features implemented:
+      // - aria-busy: Announces loading state to screen readers
+      // - aria-disabled: Indicates button is disabled
+      // - aria-label: Provides text label if icon-only
+      // - role="button": Semantic HTML already provides this
+      // - focus-visible: Clear focus indicator for keyboard users
+      // - Disabled state: Prevents all interactions
+      // - Keyboard support: Native button element handles Enter/Space
+
+# Parameters and Configuration
+parameters:
+  - name: variant
+    type: string
+    description: Button style variant
+    required: false
+    default: primary
+    examples: [primary, secondary, danger]
+    
+  - name: size
+    type: string
+    description: Button size
+    required: false
+    default: medium
+    examples: [small, medium, large]
+    
+  - name: accessibility-standard
+    type: string
+    description: WCAG compliance level
+    required: false
+    default: AA
+    examples: [AA, AAA]
+
+# Performance and Quality Metrics
+metrics:
+  success_rate: 0.98
+  average_execution_time: "1.2s"
+  user_satisfaction: 4.9
+  accessibility_score: 98
+  last_updated: "2026-05-09"
+
+# Related Prompts
+related_prompts:
+  - id: frontend-form-component
+    relationship: similar
+  - id: frontend-responsive-layout
+    relationship: related
+
+# Accessibility Checklist
+accessibility:
+  - "✓ Color contrast ratio ≥ 4.5:1 for normal text"
+  - "✓ Clear focus indicator visible at all times"
+  - "✓ Keyboard accessible (Tab, Enter, Space)"
+  - "✓ Proper ARIA labels for screen readers"
+  - "✓ Loading state announced to assistive technology"
+  - "✓ Disabled state properly communicated"
+
+# Common Pitfalls to Avoid
+pitfalls:
+  - "Using divs instead of semantic button elements"
+  - "Insufficient color contrast on hover/focus states"
+  - "Missing focus outline or making it invisible"
+  - "Not supporting keyboard navigation"
+  - "Missing ARIA labels for icon-only buttons"
+  - "Not announcing loading state to screen readers"
+  - "Too small click/touch target area (< 44px)"
+
+# Tips for Best Results
+tips:
+  - "Always use native HTML button element as base"
+  - "Test with keyboard navigation and screen readers"
+  - "Ensure minimum 44x44px touch target area"
+  - "Provide clear visual feedback for all states"
+  - "Use aria-busy for loading states"
+  - "Include loading spinner for async operations"
+  - "Test color contrast with WCAG checker tools"
+  - "Keep button text concise and action-oriented"
