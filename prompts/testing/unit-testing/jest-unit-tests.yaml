@@ -1,0 +1,253 @@
+id: testing-unit-tests
+name: Unit Testing with Jest
+domain: testing
+subdomain: unit-testing
+version: 1.0.0
+created: 2026-05-09
+updated: 2026-05-09
+status: active
+
+# Technical Specifications
+technical_specs:
+  min_model: gpt-3.5-turbo
+  recommended_model: gpt-4
+  max_tokens: 2800
+  temperature: 0.7
+  top_p: 0.95
+
+# System Prompt
+system_prompt: |
+  You are an expert in software testing and quality assurance with deep knowledge of:
+  - Jest testing framework
+  - Unit testing best practices and patterns
+  - Test-driven development (TDD)
+  - Code coverage analysis
+  - Mocking and stubbing techniques
+  - Test organization and documentation
+  - Testing async code and promises
+  
+  Your role is to help developers write comprehensive, maintainable unit tests that catch bugs and improve code quality.
+
+# User Prompt Template
+user_prompt_template: |
+  Write comprehensive Jest unit tests for a given function/component that:
+  - Cover all code paths and branches
+  - Test happy path scenarios
+  - Test edge cases and error conditions
+  - Use appropriate mocking strategies
+  - Follow testing best practices
+  - Include meaningful assertions
+  - Achieve high code coverage (>80%)
+  
+  Provide:
+  1. Complete test suite with multiple test cases
+  2. Mock data and fixtures
+  3. Setup and teardown if needed
+  4. Coverage analysis
+  5. Best practices explanation
+
+# Tags and Metadata
+tags:
+  - testing
+  - jest
+  - unit-testing
+  - quality-assurance
+  - tdd
+  - javascript
+
+difficulty_level: beginner
+use_cases:
+  - description: "Writing tests for a utility function"
+    example_input: |
+      Write Jest tests for this user authentication utility function:
+      - Function accepts email and password
+      - Validates email format
+      - Checks password strength (min 8 chars, must include number)
+      - Returns object with isValid and errors array
+      Test all validation scenarios and edge cases.
+    example_output: |
+      // validateCredentials.test.ts
+      import { validateCredentials } from './validateCredentials';
+      
+      describe('validateCredentials', () => {
+        describe('email validation', () => {
+          it('should accept valid email addresses', () => {
+            const result = validateCredentials('user@example.com', 'validPassword1');
+            expect(result.isValid).toBe(true);
+            expect(result.errors).not.toContain('Invalid email format');
+          });
+          
+          it('should reject invalid email formats', () => {
+            const result = validateCredentials('invalid-email', 'validPassword1');
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain('Invalid email format');
+          });
+          
+          it('should reject empty email', () => {
+            const result = validateCredentials('', 'validPassword1');
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain('Email is required');
+          });
+          
+          it('should handle emails with special characters', () => {
+            const emails = [
+              'user+tag@example.co.uk',
+              'user.name@sub.example.com',
+              'user_name@example.com'
+            ];
+            emails.forEach(email => {
+              const result = validateCredentials(email, 'validPassword1');
+              expect(result.isValid).toBe(true);
+            });
+          });
+        });
+        
+        describe('password validation', () => {
+          it('should accept strong passwords', () => {
+            const result = validateCredentials('user@example.com', 'StrongPass1');
+            expect(result.isValid).toBe(true);
+            expect(result.errors).not.toContain('Password must be at least 8 characters');
+          });
+          
+          it('should reject passwords shorter than 8 characters', () => {
+            const result = validateCredentials('user@example.com', 'Pass1');
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain('Password must be at least 8 characters');
+          });
+          
+          it('should reject passwords without numbers', () => {
+            const result = validateCredentials('user@example.com', 'PasswordNoNumbers');
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain('Password must include at least one number');
+          });
+          
+          it('should reject empty password', () => {
+            const result = validateCredentials('user@example.com', '');
+            expect(result.isValid).toBe(false);
+            expect(result.errors).toContain('Password is required');
+          });
+          
+          it('should handle edge case of exactly 8 characters with number', () => {
+            const result = validateCredentials('user@example.com', 'Pass0000');
+            expect(result.isValid).toBe(true);
+          });
+        });
+        
+        describe('combined validation', () => {
+          it('should return multiple errors when both email and password are invalid', () => {
+            const result = validateCredentials('invalid', 'short');
+            expect(result.isValid).toBe(false);
+            expect(result.errors.length).toBeGreaterThan(1);
+          });
+          
+          it('should clear errors between calls', () => {
+            validateCredentials('invalid', 'short');
+            const result = validateCredentials('user@example.com', 'validPassword1');
+            expect(result.isValid).toBe(true);
+            expect(result.errors).toHaveLength(0);
+          });
+        });
+      });
+
+  - description: "Testing async functions and API calls"
+    example_input: |
+      Write tests for a function that fetches user data from an API.
+      Handle success and error cases. Test with mocked API responses.
+    example_output: |
+      // fetchUser.test.ts
+      import { fetchUser } from './fetchUser';
+      import axios from 'axios';
+      
+      jest.mock('axios');
+      const mockedAxios = axios as jest.Mocked<typeof axios>;
+      
+      describe('fetchUser', () => {
+        beforeEach(() => {
+          jest.clearAllMocks();
+        });
+        
+        it('should fetch user data successfully', async () => {
+          const mockUser = { id: 1, name: 'John', email: 'john@example.com' };
+          mockedAxios.get.mockResolvedValue({ data: mockUser });
+          
+          const user = await fetchUser(1);
+          
+          expect(user).toEqual(mockUser);
+          expect(mockedAxios.get).toHaveBeenCalledWith('/api/users/1');
+        });
+        
+        it('should handle API errors gracefully', async () => {
+          const error = new Error('API Error');
+          mockedAxios.get.mockRejectedValue(error);
+          
+          await expect(fetchUser(1)).rejects.toThrow('API Error');
+        });
+        
+        it('should handle network timeouts', async () => {
+          mockedAxios.get.mockRejectedValue(new Error('Request timeout'));
+          
+          await expect(fetchUser(1)).rejects.toThrow('Request timeout');
+          expect(mockedAxios.get).toHaveBeenCalledTimes(1);
+        });
+      });
+
+# Parameters and Configuration
+parameters:
+  - name: coverage-threshold
+    type: number
+    description: Minimum code coverage percentage
+    required: false
+    default: 80
+    examples: [70, 80, 90]
+    
+  - name: test-timeout
+    type: number
+    description: Test timeout in milliseconds
+    required: false
+    default: 5000
+
+# Performance and Quality Metrics
+metrics:
+  success_rate: 0.97
+  average_execution_time: "1.8s"
+  user_satisfaction: 4.8
+  last_updated: "2026-05-09"
+
+# Related Prompts
+related_prompts:
+  - id: testing-integration-tests
+    relationship: next-step
+  - id: testing-e2e-tests
+    relationship: similar
+
+# Testing Recommendations
+testing:
+  unit:
+    - "Test each function in isolation"
+    - "Mock external dependencies"
+    - "Test both success and failure paths"
+  coverage:
+    - "Aim for >80% line coverage"
+    - "Ensure branch coverage for conditionals"
+    - "Test error scenarios"
+
+# Common Pitfalls to Avoid
+pitfalls:
+  - "Testing implementation details instead of behavior"
+  - "Not cleaning up after tests (clearAllMocks)"
+  - "Flaky tests that fail intermittently"
+  - "Not testing error cases"
+  - "Over-mocking making tests brittle"
+  - "Ignoring async/await properly"
+  - "Not grouping related tests with describe blocks"
+
+# Tips for Best Results
+tips:
+  - "Use descriptive test names that explain what is being tested"
+  - "Follow AAA pattern: Arrange, Act, Assert"
+  - "Use beforeEach and afterEach for setup and cleanup"
+  - "Test behavior, not implementation"
+  - "Keep tests focused and isolated"
+  - "Use fixtures for complex test data"
+  - "Mock external dependencies consistently"
+  - "Aim for high coverage but focus on important paths first"
